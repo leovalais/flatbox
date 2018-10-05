@@ -1,0 +1,128 @@
+\ProvidesPackage{flatbox}
+\RequirePackage{xcolor}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{ifthen}
+
+\newif\ifflatbox@align
+\flatbox@alignfalse
+\DeclareOption{align}{\flatbox@aligntrue}
+
+\newcommand{\flatbox@corners}{sharpish corners}
+\DeclareOption{rounded}{\renewcommand{\flatbox@corners}{rounded corners}}
+
+\ExecuteOptions{}
+\ProcessOptions\relax
+
+\newcommand{\setflatboxcolor}[3][fg]{\colorlet{flatbox#2.#1}{#3}}
+\newcommand{\flatbox@maybesetcolor}[3]{%
+  \@ifundefinedcolor{#2}{\colorlet{flatbox#1}{#3}}{\colorlet{flatbox#1}{#2}}%
+}
+
+% errors
+\setflatboxcolor[bg]{error}{red}
+\setflatboxcolor{error}{white}
+% default colors
+\flatbox@maybesetcolor{.fg}{iOS-blue}{blue!45!gray}
+\flatbox@maybesetcolor{.bg}{iOS-blue!70!white}{blue!5!white}
+\flatbox@maybesetcolor{example.fg}{iOS-green!70!gray}{green!40!gray}
+\flatbox@maybesetcolor{example.bg}{iOS-green!70!white}{green!5!white}
+\flatbox@maybesetcolor{alert.fg}{iOS-red}{red!90!gray}
+\flatbox@maybesetcolor{alert.bg}{iOS-red!70!white}{red!5!white}
+\flatbox@maybesetcolor{note.fg}{iOS-orange}{orange!90!gray}
+\flatbox@maybesetcolor{note.bg}{iOS-orange!70!white}{orange!5!white}
+\setflatboxcolor{theorem}{black}
+\setflatboxcolor[bg]{theorem}{black!5!white}
+
+\newtcbox{\errbox}{
+  on line,
+  colframe=flatboxerror.bg!50!black,
+  left=0mm,
+  right=0mm,
+  top=0mm,
+  bottom=0mm,
+  boxrule=.5pt,
+  colback=flatboxerror.bg,
+  fontupper=\bfseries\footnotesize,
+  coltext=flatboxerror.fg,
+  sharp corners}
+\newtcolorbox{errorbox}{
+  colframe=flatboxerror.bg!50!black,
+  colback=flatboxerror.bg,
+  fontupper=\bfseries,
+  coltext=flatboxerror.fg,
+  sharp corners}
+
+\ifflatbox@align
+\newtcolorbox{flatbox}[2][]{
+  blanker,
+  borderline west={1pt}{1mm}{flatbox#1.fg},
+  left=3mm,
+  leftrule=2mm,
+  toprule=.3em,
+  bottomrule=.3em,
+  title=#2,
+  bottomtitle=.75\baselineskip,
+  coltitle=flatbox#1.fg,
+  fonttitle=\bfseries
+}
+\else
+\newtcolorbox{flatbox}[2][]{
+  blanker,
+  borderline west={1pt}{3mm}{flatbox#1.fg},
+  left=6mm,
+  toprule=.3em,
+  bottomrule=.3em,
+  title=#2,
+  bottomtitle=.75\baselineskip,
+  coltitle=flatbox#1.fg,
+  fonttitle=\bfseries,
+}
+\fi
+
+
+\newcommand{\newflatbox}[2]{\newenvironment{#1}[1]{\begin{flatbox}[#2]{##1}}{\end{flatbox}}}
+
+\newflatbox{exampleflatbox}{example}
+\newflatbox{alertflatbox}{alert}
+\newflatbox{noteflatbox}{note}
+\newflatbox{theoremflatbox}{theorem}
+
+%% For some reason, tcolorbox doesn't allow macro expansions inside options
+%% to contain an equal sign, hence the following hack.
+\ifflatbox@align
+\newcommand{\flatbox@ffboxalign}{left skip}
+\newcommand{\flatbox@ffboxalignvalue}{1mm}
+\else
+\newcommand{\flatbox@ffboxalign}{}
+\newcommand{\flatbox@ffboxalignvalue}{}
+\fi
+
+\newenvironment{ffbox}[2][]{%
+  \begin{tcolorbox}[
+    frame hidden,
+    interior hidden,
+    toprule=0mm,
+    bottomrule=0mm,
+    rightrule=0mm,
+    leftrule=.5mm,
+    boxsep=0mm,
+    \flatbox@ffboxalign=\flatbox@ffboxalignvalue,
+    \flatbox@corners,
+    colback=flatbox#1.bg,
+    colframe=flatbox#1.fg
+    ]%
+    \ifthenelse{\equal{#2}{\@empty}}{}{%
+      \textcolor{flatbox#1.fg}{\textbf{#2}}\\
+
+      \vspace*{-.75\baselineskip}
+    }
+  }{\end{tcolorbox}}
+
+\newcommand{\newffbox}[2]{\newenvironment{#1}[1]{\begin{ffbox}[#2]{##1}}{\end{ffbox}}}
+
+\newffbox{exampleffbox}{example}
+\newffbox{alertffbox}{alert}
+\newffbox{noteffbox}{note}
+\newffbox{theoremffbox}{theorem}
+
+\endinput

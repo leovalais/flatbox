@@ -1,0 +1,218 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{minted}
+\usepackage[align]{flatbox}
+
+\usemintedstyle{colorful}
+\newminted{latex}{linenos}
+
+\newcommand{\dashskip}{%
+  \begin{center}
+    \rule{3em}{.1pt}
+  \end{center}}
+
+\BeforeBeginEnvironment{latexcode}{\medskip\textit{\underline{\LaTeX{} code:}}}
+
+\title{Demo of \texttt{flatbox}}
+\author{Léo Valais}
+\date\today
+
+\begin{document}
+\maketitle
+
+Dependencies:
+\begin{itemize}
+\item xcolor
+\item tcolorbox
+\item ifthen
+\item applecolors (optional)
+\end{itemize}
+
+\section{Presentation}
+The package \texttt{flabox} provides two kind of \texttt{tcolorbox}es:
+
+\begin{itemize}
+\item \texttt{flatbox}: boxes without background
+\item \texttt{ffbox}: boxes with filled background
+\end{itemize}
+
+\begin{flatbox}{Title}
+  I'm a \texttt{flatbox}.
+\end{flatbox}
+
+\begin{ffbox}{Title}
+  I'm a \texttt{ffbox}.
+\end{ffbox}
+
+\begin{latexcode}
+\begin{flatbox}{Title}
+  I'm a \texttt{flatbox}.
+\end{flatbox}
+
+\begin{ffbox}{Title}
+  I'm a \texttt{ffbox}.
+\end{ffbox}
+\end{latexcode}
+
+These two kinds of boxes can have an empty title:
+
+\begin{flatbox}{}
+  I'm a \texttt{flatbox} without title.
+\end{flatbox}
+
+\begin{ffbox}{}
+  I'm a \texttt{ffbox} without title.
+\end{ffbox}
+
+\begin{latexcode}
+\begin{flatbox}{}
+  I'm a \texttt{flatbox} without title.
+\end{flatbox}
+
+\begin{ffbox}{}
+  I'm a \texttt{ffbox} without title.
+\end{ffbox}
+\end{latexcode}
+
+\subsection{Colors}
+Since these boxes are intentionally simplistic, the main point one wants to
+customize is the colors. To define \texttt{flatbox}-compatible colors, use \texttt{$\backslash$setflatboxcolor}.
+
+\begin{latexcode}
+\setflatboxcolor[fg]{hippie}{red} % same as \setflatboxcolor{hippie}{red}
+\setflatboxcolor[bg]{hippie}{green}
+\end{latexcode}
+
+For \texttt{flatbox}es, the background color is useless and it is not even
+necessary to define it.
+
+Then, to use this color combination, pass the name of the combination as an
+optional parameter to the boxes:
+
+\begin{latexcode}
+\begin{flatbox}[hippie]{Hippie flatbox}
+  I'm a hippie box.
+\end{flatbox}
+
+\begin{ffbox}[hippie]{Hippie flatbox}
+  I'm a hippie box.
+\end{ffbox}
+\end{latexcode}
+
+\setflatboxcolor[fg]{hippie}{red} % same as \setflatboxcolor{hippie}{red}
+\setflatboxcolor[bg]{hippie}{green}
+
+\begin{flatbox}[hippie]{Hippie flatbox}
+  I'm a hippie box.
+\end{flatbox}
+
+\begin{ffbox}[hippie]{Hippie flatbox}
+  I'm a hippie box.
+\end{ffbox}
+
+\medskip
+
+Alternatively, you can manually define the colors using the \texttt{xcolor}
+package facilities:
+
+\begin{latexcode}
+\colorlet{flatboxhippie.fg}{red}
+\definecolor{flatboxhippie.bg}{RGB}{0,255,0}
+\end{latexcode}
+
+\bigskip
+
+The \texttt{flatbox} package defines some default colors for the environments
+\texttt{flatbox}, \texttt{exampleflatbox}, \texttt{alertflatbox},
+\texttt{noteflatbox}, \texttt{theoremflatbox},
+\texttt{ffbox}, \texttt{exampleffbox}, \texttt{alertffbox},
+\texttt{noteffbox} and \texttt{theoremffbox} which are shown in section \ref{sec:show}.
+
+\dashskip
+You can also override default colors, which names are:
+\begin{itemize}
+  \renewcommand{\line}[1]{\item \texttt{flatbox#1.fg} and \texttt{flatbox#1.bg}}
+  \line{}
+  \line{example}
+  \line{alert}
+  \line{theorem}
+  \line{note}
+\end{itemize}
+
+\dashskip
+If the package \texttt{applecolors} is imported \textcolor{red}{\textbf{before}}
+\texttt{flatbox}, the iOS colors are used as default colors instead.
+
+\subsection{Error boxes}
+This package also defines the command \texttt{$\backslash$errbox} and the
+environment \texttt{errorbox} that uses the colors \texttt{flatboxerror.fg} and
+\texttt{flatboxerror.bg}. They're sometimes useful to the writter for debugging
+purposes or to leave temporary notes but clearly not meant to be kept in the final
+document.
+
+I'm a sentance\errbox{oh crap!} with some mistackes\errbox{not again!}.
+
+\begin{errorbox}
+  Fix spelling (aspell?).
+\end{errorbox}
+
+\begin{latexcode}
+I'm a sentance\errbox{oh crap!} with some mistackes\errbox{not again!}.
+
+\begin{errorbox}
+  Fix spelling (aspell?).
+\end{errorbox}
+\end{latexcode}
+
+\subsection{Package options}
+The package \texttt{flatbox} accepts two options:
+\begin{itemize}
+\item \texttt{rounded}: gives \texttt{ffbox}es rounded corners
+\item \texttt{align}: if you wish to use both \texttt{flatbox}es and
+  \texttt{ffbox}es in the same document, you might want to have their left magin
+  aligned. This option does that (\texttt{flatbox}es have more indentation otherwise).
+
+  This option is used in this document.
+\end{itemize}
+
+\newpage
+\section{Demo}
+\label{sec:show}
+Each box just has one (required) parameter: the title (can be empty).
+
+\begin{latexcode}
+\begin{style of flatbox}{optional title}
+\end{latexcode}
+
+\newcommand{\demo}[2][I'm a demo box.\\Also I like to span over\\multiple\\lines.]{%
+  \subsection{\texttt{#2flatbox} and \texttt{#2ffbox}}
+  \begin{minipage}[c]{.5\linewidth}
+    \begin{#2flatbox}{Demo of \texttt{#2flatbox}}
+      #1
+    \end{#2flatbox}
+  \end{minipage}
+  \begin{minipage}[c]{.5\linewidth}
+    \begin{#2ffbox}{Demo of \texttt{#2ffbox}}
+      #1
+    \end{#2ffbox}
+  \end{minipage}
+  \begin{minipage}[c]{.5\linewidth}
+    \begin{#2flatbox}{} #1 \end{#2flatbox}
+  \end{minipage}
+  \begin{minipage}[c]{.5\linewidth}
+    \begin{#2ffbox}{} #1 \end{#2ffbox}
+  \end{minipage}
+}
+
+\demo{}
+\demo{example}
+\demo{alert}
+\demo[Stirling's approximation\\\[
+  \forall n \in \mathbb{N}, n! \sim \sqrt{2 \cdot \pi \cdot n} \cdot \left(\frac{n}{e}\right)^n
+\]]{theorem}
+\demo{note}
+
+\end{document}
