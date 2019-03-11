@@ -32,6 +32,9 @@
 \flatbox@maybesetcolor{note.bg}{iOS-orange!70!white}{orange!5!white}
 \setflatboxcolor{theorem}{black}
 \setflatboxcolor[bg]{theorem}{black!5!white}
+% groupboxes
+\setflatboxcolor[bg]{groupbox}{white}
+\setflatboxcolor{groupbox}{black!75!white}
 
 \newtcbox{\errbox}{
   on line,
@@ -124,5 +127,26 @@
 \newffbox{alertffbox}{alert}
 \newffbox{noteffbox}{note}
 \newffbox{theoremffbox}{theorem}
+
+
+\newenvironment{groupbox}[2][]{%
+  \begin{tcolorbox}[
+    enhanced,
+    title=#2,
+    fonttitle=\bfseries,
+    coltitle=flatbox#1.fg,
+    colback=flatboxgroupbox.bg,
+    colframe=flatboxgroupbox.fg,
+    attach boxed title to top left={yshift=-0.25mm-\tcboxedtitleheight/2,yshifttext=2mm-\tcboxedtitleheight/2,xshift=2.5mm},
+    boxed title style={colframe=flatboxgroupbox.bg,colback=flatboxgroupbox.bg,left=1mm,right=1mm}
+    ]
+  }{\end{tcolorbox}}
+
+\newcommand{\newgroupbox}[2]{\newenvironment{#1}[1]{\begin{groupbox}[#2]{##1}}{\end{groupbox}}}
+
+\newgroupbox{examplegroupbox}{example}
+\newgroupbox{alertgroupbox}{alert}
+\newgroupbox{notegroupbox}{note}
+\newgroupbox{theoremgroupbox}{theorem}
 
 \endinput
